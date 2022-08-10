@@ -1,3 +1,4 @@
+import { Bullet } from "./js/Bullet.js";
 import { backgroundImage } from "./js/GameAssets.js";
 import { Player } from "./js/Player.js";
 
@@ -8,6 +9,8 @@ const _ = (q) => document.querySelector(q);
 class Game {
 
     player = new Player();
+
+
     elements = [this.player];
 
     keys = {};
@@ -25,6 +28,10 @@ class Game {
     registerEventListeners() {
         document.addEventListener("keydown", (e) => {
             this.keys[e.code] = true;
+
+            if(e.code === "Space") {
+                this.elements.push(this.player.shoot())
+            }
         })
         document.addEventListener("keyup", (e) => {
             this.keys[e.code] = false;
@@ -45,7 +52,7 @@ class Game {
 
     update() {
         this.elements.map((e, i) => {
-            e.update(this.keys, this.ctx)
+            e.update(this.keys)
         })
     }
 
