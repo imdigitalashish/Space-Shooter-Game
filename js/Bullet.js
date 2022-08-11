@@ -1,3 +1,4 @@
+import { playerBullet } from "./GameAssets.js";
 
 export class Bullet {
 
@@ -6,13 +7,19 @@ export class Bullet {
         this.position = position;
         this.angle = angle
         this.velocity = { x: 8, y: 8 }
+        this.scalingFactor = 0.8
+        this.width = playerBullet.width * this.scalingFactor;
+        this.height = playerBullet.height * this.scalingFactor;
     }
 
 
     render(ctx) {
         ctx.save()
-        ctx.fillStyle = "red";
-        ctx.fillRect(this.position.x, this.position.y, 10, 10);
+        ctx.translate(this.position.x, this.position.y)
+        ctx.rotate(this.angle * Math.PI / 180)
+        ctx.translate(-this.position.x, -this.position.y);
+        ctx.drawImage(playerBullet, this.position.x, this.position.y, this.width, this.height);
+        // ctx.fillRect(this.position.x, this.position.y, 10, 10);
         ctx.restore()
     }
 

@@ -1,5 +1,5 @@
 import { Bullet } from "./Bullet.js";
-import { playerSpaceShip } from "./GameAssets.js";
+import { playerShipSound, playerSpaceShip } from "./GameAssets.js";
 import { Vector } from "./Vector.js";
 
 export class Player {
@@ -8,7 +8,7 @@ export class Player {
     constructor() {
         console.log(playerSpaceShip.width);
         this.pos = new Vector(10, 10)
-        this.scalingFactor = 0.6
+        this.scalingFactor = 0.55
         this.angleByRotated = 0;
         this.width = playerSpaceShip.width * this.scalingFactor
         this.height = playerSpaceShip.height * this.scalingFactor
@@ -33,10 +33,10 @@ export class Player {
 
 
     update(keys) {
-        if (keys.ArrowRight || keys.KeyD) { this.pos = this.pos.add(new Vector(3, 0)) }
-        else if (keys.KeyW) { this.pos = this.pos.add(new Vector(0, -3)) }
-        else if (keys.KeyS) { this.pos = this.pos.add(new Vector(0, 3)) }
-        else if (keys.ArrowLeft || keys.KeyA) { this.pos = this.pos.add(new Vector(-3, 0)) }
+        if (keys.ArrowRight || keys.KeyD) { this.pos = this.pos.add(new Vector(6, 0)) }
+        else if (keys.KeyW) { this.pos = this.pos.add(new Vector(0, -6)) }
+        else if (keys.KeyS) { this.pos = this.pos.add(new Vector(0, 6)) }
+        else if (keys.ArrowLeft || keys.KeyA) { this.pos = this.pos.add(new Vector(-6, 0)) }
         // console.log(this.pos);
 
         if (keys.ArrowUp) {
@@ -45,11 +45,18 @@ export class Player {
             this.angleByRotated += 8;
         }
 
+        if (playerShipSound.currentTime >= 0.3) {
+            playerShipSound.pause();
+            playerShipSound.currentTime = 0;
+        }
+
         return false;
     }
 
     shoot() {
-        console.log(this.pos.angle())
+
+        playerShipSound.play();
+
         return new Bullet({ position: { x: this.pos.x + this.width - this.width/1.8, y: this.pos.y + this.height/2.5 }, angle: this.angleByRotated})
     }
 
