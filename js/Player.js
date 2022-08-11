@@ -19,7 +19,8 @@ export class Player {
     render(ctx) {
         ctx.save()
         ctx.translate(this.pos.x + (this.width / 2), this.pos.y + (this.height / 2))
-        ctx.rotate(this.angleByRotated)
+        // ctx.rotate(this.angleByRotated)
+        ctx.rotate(this.angleByRotated * Math.PI / 180)
         ctx.translate(-(this.pos.x + (this.width / 2)), -(this.pos.y + (this.height / 2)))
         ctx.drawImage(playerSpaceShip, this.pos.x, this.pos.y, this.width, this.height)
 
@@ -39,16 +40,17 @@ export class Player {
         // console.log(this.pos);
 
         if (keys.ArrowUp) {
-            this.angleByRotated -= 0.1;
+            this.angleByRotated -= 8;
         } else if (keys.ArrowDown) {
-            this.angleByRotated += 0.1;
+            this.angleByRotated += 8;
         }
 
         return false;
     }
 
     shoot() {
-        return new Bullet({ position: { x: this.pos.x + this.width - this.width/1.8, y: this.pos.y + this.height/2.5 } })
+        console.log(this.pos.angle())
+        return new Bullet({ position: { x: this.pos.x + this.width - this.width/1.8, y: this.pos.y + this.height/2.5 }, angle: this.angleByRotated})
     }
 
 }
