@@ -1,5 +1,6 @@
 import { Asteroids } from "./js/Asteriods.js";
 import { Bullet } from "./js/Bullet.js";
+import { CONSTANTS } from "./js/constants.js";
 import { EnemySpaceShip } from "./js/EnemySpaceShip.js";
 import { asteriods, canvasBackground, backgroundSound, destroyedSound } from "./js/GameAssets.js";
 import { Player } from "./js/Player.js";
@@ -26,6 +27,8 @@ class Game {
         enemySpaceShip: 0
     }
 
+
+
     constructor() {
         this.canvas = document.querySelector("canvas");
         this.ctx = this.canvas.getContext('2d');
@@ -33,6 +36,12 @@ class Game {
         this.canvas.height = window.innerHeight * 0.85;
         this.canvas.style.backgroundColor = "black";
         requestAnimationFrame(this.render.bind(this));
+
+        // INITIALIZING CONSTANGS
+        CONSTANTS.canvasheight = this.canvas.height;
+        CONSTANTS.canvaswidth = this.canvas.width;
+
+
 
 
         this.registerEventListeners();

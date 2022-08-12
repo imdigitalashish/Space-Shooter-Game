@@ -1,5 +1,6 @@
 import { Bullet } from "./Bullet.js";
-import { playerShipSound, playerSpaceShip } from "./GameAssets.js";
+import { CONSTANTS } from "./constants.js";
+import { canvasBackground, playerShipSound, playerSpaceShip } from "./GameAssets.js";
 import { Vector } from "./Vector.js";
 
 export class Player {
@@ -33,10 +34,10 @@ export class Player {
 
 
     update(keys) {
-        if (keys.KeyD) { this.pos = this.pos.add(new Vector(6, 0)) }
-        else if (keys.KeyW) { this.pos = this.pos.add(new Vector(Math.cos(this.angleByRotated * Math.PI / 180) * this.velocity.x, Math.sin(this.angleByRotated * Math.PI / 180) * this.velocity.y)) }
+        // if (keys.KeyD) { this.pos = this.pos.add(new Vector(6, 0)) }
+        if (keys.KeyW) { this.pos = this.pos.add(new Vector(Math.cos(this.angleByRotated * Math.PI / 180) * this.velocity.x, Math.sin(this.angleByRotated * Math.PI / 180) * this.velocity.y)) }
         else if (keys.KeyS) { this.pos = this.pos.add(new Vector(Math.cos(this.angleByRotated * Math.PI / 180) * -this.velocity.x, -Math.sin(this.angleByRotated * Math.PI / 180) * this.velocity.y)) }
-        else if (keys.KeyA) { this.pos = this.pos.add(new Vector(-6, 0)) }
+        // else if (keys.KeyA) { this.pos = this.pos.add(new Vector(-6, 0)) }
         // console.log(this.pos);
 
         if (keys.ArrowLeft) {
@@ -50,6 +51,19 @@ export class Player {
             playerShipSound.currentTime = 0;
         }
 
+        if (this.pos.y > CONSTANTS.canvasheight) {
+            this.pos.y = 0;
+        }
+        if (this.pos.y + this.width < 0) {
+            this.pos.y = CONSTANTS.canvasheight;
+        }
+        if (this.pos.x > CONSTANTS.canvaswidth) {
+            this.pos.x = 0
+        }
+
+        if (this.pos.x + this.width< 0) {
+            this.pos.x = CONSTANTS.canvaswidth;
+        }
         return false;
     }
 
