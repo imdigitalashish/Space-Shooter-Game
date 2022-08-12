@@ -1,12 +1,11 @@
-let backgroundImage = new Image();
-backgroundImage.src = "assets/bg.jpg"
-
+let canvasBackground = new Image();
+canvasBackground.src = "assets/bg.jpg";
 
 let playerSpaceShip = new Image();
 playerSpaceShip.src = "assets/spaceship.png";
 
 let playerShipSound = new Audio();
-playerShipSound.src = "assets/gunsound.mp3"
+playerShipSound.src = "sounds/gunsound.mp3"
 
 let asteriods = new Image();
 asteriods.src = "assets/meteor.png";
@@ -14,4 +13,12 @@ asteriods.src = "assets/meteor.png";
 let playerBullet = new Image();
 playerBullet.src = "assets/bullet.png";
 
-export { backgroundImage, playerSpaceShip, playerShipSound, asteriods, playerBullet };
+let enemySpaceShip = new Image();
+enemySpaceShip.src = "assets/ship_enemy.png";
+
+let destroyedSound = new Audio();
+destroyedSound.src = "sounds/destroyed.mp3";
+
+let backgroundSound = new Audio();
+backgroundSound.src = "sounds/background.mp3";
+export { playerSpaceShip, playerShipSound, asteriods, playerBullet, destroyedSound, backgroundSound, canvasBackground, enemySpaceShip };

@@ -8,7 +8,7 @@ export class Asteroids {
         this.position = position
         this.velocity = { x: 20, y: 0 }
         this.numberOfHits = 0
-        this.scalingFactor = 0.4
+        this.scalingFactor = 0.3
         this.width = asteriods.width * this.scalingFactor;
         this.height = asteriods.height * this.scalingFactor;
     }

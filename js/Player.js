@@ -8,6 +8,7 @@ export class Player {
     constructor() {
         console.log(playerSpaceShip.width);
         this.pos = new Vector(10, 10)
+        this.velocity = new Vector(8, 8)
         this.scalingFactor = 0.5
         this.angleByRotated = 0;
         this.width = playerSpaceShip.width * this.scalingFactor
@@ -33,14 +34,14 @@ export class Player {
 
     update(keys) {
         if (keys.KeyD) { this.pos = this.pos.add(new Vector(6, 0)) }
-        else if (keys.KeyW) { this.pos = this.pos.add(new Vector(0, -6)) }
-        else if (keys.KeyS) { this.pos = this.pos.add(new Vector(0, 6)) }
+        else if (keys.KeyW) { this.pos = this.pos.add(new Vector(Math.cos(this.angleByRotated * Math.PI / 180) * this.velocity.x, Math.sin(this.angleByRotated * Math.PI / 180) * this.velocity.y)) }
+        else if (keys.KeyS) { this.pos = this.pos.add(new Vector(Math.cos(this.angleByRotated * Math.PI / 180) * -this.velocity.x, -Math.sin(this.angleByRotated * Math.PI / 180) * this.velocity.y)) }
         else if (keys.KeyA) { this.pos = this.pos.add(new Vector(-6, 0)) }
         // console.log(this.pos);
 
-        if (keys.ArrowUp) {
+        if (keys.ArrowLeft) {
             this.angleByRotated -= 8;
-        } else if (keys.ArrowDown) {
+        } else if (keys.ArrowRight) {
             this.angleByRotated += 8;
         }
 

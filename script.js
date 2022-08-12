@@ -1,6 +1,7 @@
 import { Asteroids } from "./js/Asteriods.js";
 import { Bullet } from "./js/Bullet.js";
-import { asteriods, backgroundImage } from "./js/GameAssets.js";
+import { EnemySpaceShip } from "./js/EnemySpaceShip.js";
+import { asteriods, canvasBackground, backgroundSound, destroyedSound } from "./js/GameAssets.js";
 import { Player } from "./js/Player.js";
 import { Vector } from "./js/Vector.js";
 
@@ -20,7 +21,10 @@ class Game {
 
     keys = {};
 
-    numberOfTicks = 0;
+    timeElapsedFor = {
+        asteroids: 0,
+        enemySpaceShip: 0
+    }
 
     constructor() {
         this.canvas = document.querySelector("canvas");
@@ -31,13 +35,26 @@ class Game {
         requestAnimationFrame(this.render.bind(this));
 
 
-
         this.registerEventListeners();
-        this.tiggerSpawnAsteroids();
+        this.spawnElements.spawnAsteroids();
+
+
+        this.currentTime = Date.now();
+        this.diff = 2;
     }
+
+    // isPlaying = false;
+    // playBackgroundSound() {
+    //     if(!this.isPlaying)
+    //     backgroundSound.play();
+
+    // }
 
     registerEventListeners() {
         document.addEventListener("keydown", (e) => {
+
+
+
             this.keys[e.code] = true;
 
             if (e.code === "Space") {
@@ -49,13 +66,23 @@ class Game {
         })
     }
 
-    tiggerSpawnAsteroids() {
-        this.enemyElements.push(new Asteroids({ position: new Vector(this.canvas.width - 20, this.canvas.height - 200) }))
+    generateRandomNumber = (min, max) => Math.floor(Math.random() * (max - min)) + min;
+
+    spawnElements = {
+        spawnSpaceShip: () => {
+            this.enemyElements.push(new EnemySpaceShip({ position: new Vector(this.canvas.width, this.generateRandomNumber(10, this.canvas.height - 200)) }));
+
+        },
+        spawnAsteroids: () => {
+            this.enemyElements.push(new Asteroids({ position: new Vector(this.canvas.width - 20, this.generateRandomNumber(10, this.canvas.height - 200)) }))
+
+        }
     }
+
 
     render(ts) {
 
-        this.ctx.drawImage(backgroundImage, 0, 0, this.canvas.width, this.canvas.height)
+        this.ctx.drawImage(canvasBackground, 0, 0, this.canvas.width, this.canvas.height)
         this.ctx.fillStyle = "rgba(0,0,0,0.3)"
         this.ctx.fillRect(0, 0, this.canvas.width, this.canvas.height);
 
@@ -67,7 +94,12 @@ class Game {
         this.enemyElements.map((e) => e.render(this.ctx));
         this.shots.map(e => e.render(this.ctx));
 
-        this.update();
+
+        // MAKING FPS CONSTANT
+        if (Date.now() - this.currentTime > this.diff) {
+            this.update();
+            this.currentTime = Date.now();
+        }
 
     }
 
@@ -78,16 +110,22 @@ class Game {
         this.enemyElements.map((e) => e.update(this.keys));
         this.shots.map(e => e.update(this.keys));
 
-        this.numberOfTicks++;
+        Object.entries(this.timeElapsedFor).forEach((object) => {
+            this.timeElapsedFor[object[0]]++;
+        })
 
-        if (this.numberOfTicks > 80) {
-            this.tiggerSpawnAsteroids();
-            this.numberOfTicks = 0;
-
+        if (this.timeElapsedFor.asteroids > 80) {
+            this.spawnElements.spawnAsteroids();
+            this.timeElapsedFor.asteroids = 0;
         }
 
-        this.playerCollisionCheckWithAsteroids();
-        this.bulletsCollisionCheckWithAsteroids();
+        if (this.timeElapsedFor.enemySpaceShip > Math.floor(Math.random() * 80) + 200) {
+            this.spawnElements.spawnSpaceShip();
+            this.timeElapsedFor.enemySpaceShip = 0;
+        }
+
+        this.collisions.playerCollisionWithAsteroids();
+        this.collisions.bulletCollisionWithAsteroids();
         this.clearEnemyElements();
 
     }
@@ -101,38 +139,43 @@ class Game {
         })
     }
 
-    bulletsCollisionCheckWithAsteroids() {
-        this.shots.forEach((bullet, bulletPos) => {
-            this.enemyElements.forEach((enemy, enemyPos) => {
-                // console.log(`${bullet.position.x + bullet.width} > ${enemy.position.x} && ${bullet.position.x + bullet.width} < ${enemy.position.x + enemy.width}`)
-                if (bullet.position.x + bullet.width - Bullet.bulletActualhit > enemy.position.x &&
-                    bullet.position.x + bullet.width < enemy.position.x + enemy.width &&
-                    ((bullet.position.y > enemy.position.y && bullet.position.y < enemy.position.y + enemy.width))) {
 
-                    this.shots.splice(bulletPos, 1);
-                    this.enemyElements.splice(enemyPos, 1);
+    collisions = {
+        bulletCollisionWithAsteroids: () => {
+            this.shots.forEach((bullet, bulletPos) => {
+                this.enemyElements.forEach((enemy, enemyPos) => {
+                    // console.log(`${bullet.position.x + bullet.width} > ${enemy.position.x} && ${bullet.position.x + bullet.width} < ${enemy.position.x + enemy.width}`)
+                    if (bullet.position.x + bullet.width - Bullet.bulletActualhit > enemy.position.x &&
+                        bullet.position.x + bullet.width < enemy.position.x + enemy.width + 20 &&
+                        ((bullet.position.y > enemy.position.y && bullet.position.y < enemy.position.y + enemy.width))) {
+
+                        this.shots.splice(bulletPos, 1);
+                        this.enemyElements.splice(enemyPos, 1);
+                        destroyedSound.play();
+
+                    }
+                })
+            })
+        },
+
+        playerCollisionWithAsteroids: () => {
+            this.enemyElements.forEach((enemy) => {
+                // COLLISION CHECK 1
+                if (enemy.position.x < this.player.pos.x + this.player.width &&
+                    enemy.position.x > this.player.pos.x &&
+                    ((enemy.position.y > this.player.pos.y &&
+                        enemy.position.y < this.player.pos.y + this.player.height) ||
+                        (enemy.position.y + enemy.height > this.player.pos.y &&
+                            enemy.position.y + enemy.height < this.player.pos.y + this.player.height))
+                ) {
+                    console.log("collided");
 
                 }
             })
-        })
+        }
     }
 
 
-    playerCollisionCheckWithAsteroids() {
-        this.enemyElements.forEach((enemy) => {
-            // COLLISION CHECK 1
-            if (enemy.position.x < this.player.pos.x + this.player.width &&
-                enemy.position.x > this.player.pos.x &&
-                ((enemy.position.y > this.player.pos.y &&
-                    enemy.position.y < this.player.pos.y + this.player.height) ||
-                    (enemy.position.y + enemy.height > this.player.pos.y &&
-                        enemy.position.y + enemy.height < this.player.pos.y + this.player.height))
-            ) {
-                // console.log("collided");
-
-            }
-        })
-    }
 
 }
 
