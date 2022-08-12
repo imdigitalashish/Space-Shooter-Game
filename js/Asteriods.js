@@ -8,16 +8,18 @@ export class Asteroids {
         this.position = position
         this.velocity = { x: 20, y: 0 }
         this.numberOfHits = 0
-
+        this.scalingFactor = 0.4
+        this.width = asteriods.width * this.scalingFactor;
+        this.height = asteriods.height * this.scalingFactor;
     }
 
     render(ctx) {
-        ctx.drawImage(asteriods, this.position.x, this.position.y)
+        ctx.drawImage(asteriods, this.position.x, this.position.y, this.width, this.height);
         // ctx.fillRect(this.position.x, this.position.y, 30, 30);
     }
 
     update(keys) {
-        this.position = this.position.add(new Vector(-20, 0));
+        this.position = this.position.add(new Vector(-7, 0));
     }
 
 }

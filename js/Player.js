@@ -8,7 +8,7 @@ export class Player {
     constructor() {
         console.log(playerSpaceShip.width);
         this.pos = new Vector(10, 10)
-        this.scalingFactor = 0.55
+        this.scalingFactor = 0.5
         this.angleByRotated = 0;
         this.width = playerSpaceShip.width * this.scalingFactor
         this.height = playerSpaceShip.height * this.scalingFactor
@@ -27,16 +27,15 @@ export class Player {
         // For Tracking Current Position
         ctx.fillStyle = "red";
         ctx.fillRect(this.pos.x + (this.width / 2), this.pos.y + (this.height / 2), 10, 10)
-
         ctx.restore()
     }
 
 
     update(keys) {
-        if (keys.ArrowRight || keys.KeyD) { this.pos = this.pos.add(new Vector(6, 0)) }
+        if (keys.KeyD) { this.pos = this.pos.add(new Vector(6, 0)) }
         else if (keys.KeyW) { this.pos = this.pos.add(new Vector(0, -6)) }
         else if (keys.KeyS) { this.pos = this.pos.add(new Vector(0, 6)) }
-        else if (keys.ArrowLeft || keys.KeyA) { this.pos = this.pos.add(new Vector(-6, 0)) }
+        else if (keys.KeyA) { this.pos = this.pos.add(new Vector(-6, 0)) }
         // console.log(this.pos);
 
         if (keys.ArrowUp) {
@@ -56,8 +55,7 @@ export class Player {
     shoot() {
 
         playerShipSound.play();
-
-        return new Bullet({ position: { x: this.pos.x + this.width - this.width/1.8, y: this.pos.y + this.height/2.5 }, angle: this.angleByRotated})
+        return new Bullet({ position: { x: this.pos.x + this.width - this.width / 1.8, y: this.pos.y + this.height / 2.5 }, angle: this.angleByRotated })
     }
 
 }

@@ -2,11 +2,12 @@ import { playerBullet } from "./GameAssets.js";
 
 export class Bullet {
 
+    static bulletActualhit = 30;
 
     constructor({ position, angle }) {
         this.position = position;
         this.angle = angle
-        this.velocity = { x: 8, y: 8 }
+        this.velocity = { x: 15, y:15 }
         this.scalingFactor = 0.8
         this.width = playerBullet.width * this.scalingFactor;
         this.height = playerBullet.height * this.scalingFactor;
