@@ -1,6 +1,6 @@
 import { Bullet } from "./Bullet.js";
 import { CONSTANTS } from "./constants.js";
-import { canvasBackground, playerShipSound, playerSpaceShip } from "./GameAssets.js";
+import { backgroundSound, canvasBackground, playerShipSound, playerSpaceShip } from "./GameAssets.js";
 import { Vector } from "./Vector.js";
 
 export class Player {
@@ -89,9 +89,10 @@ export class Player {
         if (this.fuelLevel < 0) {
             CONSTANTS.gameStarted = false;
             document.querySelector(".gameOverOverlay").style.display = "inline";
+            backgroundSound.pause();
         }
-        console.log(percentage);
         document.querySelector("#fuelProgress").style.width = percentage + "%";
+
     }
 
     shoot() {

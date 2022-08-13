@@ -6,8 +6,8 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Space Shooter Game</title>
-    <script src="script.js" type="module"></script>
-
+    <script src="game.js" type="module"></script>
+    <script src="main.js"></script>
     <link rel="stylesheet" href="main.css">
 </head>
 
@@ -15,7 +15,19 @@
     <div class="game">
 
         <div class="introScreen">
-            <button onclick='document.querySelector(".game").style.transform = "translateY(-100vh)";'>Start Game</button>
+            <h1>Space Shooter</h1>
+            <button onclick='startGame();'>Start Game</button>
+            <br><br>
+            <h2>How to play: </h2>
+            <div style="display: flex;justify-content:center">
+                <ul class="instructions">
+                    <li>Use W, S keys to move back and forth</li>
+                    <li>Use A, D keys to rotate and move forward or Arrow Left, Arrow Right</li>
+                    <li>Use A, D keys to rotate and move forward or Arrow Left, Arrow Right</li>
+                    <li>Collect Fuels so you don't run our of fuel</li>
+                    <li>Shoot asteroids and spaceship and bullets so you don't loose out fuel rapidly</li>
+                </ul>
+            </div>
         </div>
 
         <div class="gameOverOverlay">

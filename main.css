@@ -10,7 +10,7 @@
 }
 
 body {
-    /* overflow: hidden; */
+    overflow: hidden;
     background: url("assets/webpagebackground.jpg");
     background-size: cover;
     font-family: "GameFont", 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
@@ -122,6 +122,35 @@ canvas {
 
 .introScreen {
     height: 100vh;
+    color: white;
+    text-align: center;
+    padding-top: 10rem;
+}
+
+.introScreen > button {
+    padding-inline: 20px;
+    padding-block: 10px;
+    border-radius: 10px;
+    font-size: 20px;
+    background-color: orange;
+    color: white;
+    cursor: pointer;
+    margin-top: 20px;
+}
+
+.instructions {
+    margin-top: 30px;
+    text-align: start;
+    list-style: none;
+}
+
+.instructions > li {
+    margin-top: 20px;
+    font-size: 1.3rem;
+}
+.instructions > li::before{
+    content: '> ';
+    font-family: 'Courier New', Courier, monospace;
 }
 
 .gameScreen {

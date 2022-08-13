@@ -1,5 +1,5 @@
 let CONSTANTS = {
-    gameStarted: false,
+    gameStarted: true,
     canvasheight: 0,
     canvaswidth: 0,
 }

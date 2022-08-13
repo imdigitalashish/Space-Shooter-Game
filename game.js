@@ -3,7 +3,8 @@ import { Bullet } from "./js/Bullet.js";
 import { CONSTANTS } from "./js/constants.js";
 import { EnemyBullet } from "./js/EnemyBullet.js";
 import { EnemySpaceShip } from "./js/EnemySpaceShip.js";
-import { asteriods, canvasBackground, backgroundSound, destroyedSound } from "./js/GameAssets.js";
+import { Fuel } from "./js/Fuel.js";
+import { asteriods, canvasBackground, backgroundSound, destroyedSound, fuelImage } from "./js/GameAssets.js";
 import { Player } from "./js/Player.js";
 import { Vector } from "./js/Vector.js";
 
@@ -19,7 +20,7 @@ class Game {
     elements = [this.player];
     enemyElements = [];
     shots = [];
-
+    fuelTanks = [];
 
     keys = {};
 
@@ -27,6 +28,7 @@ class Game {
         asteroids: 0,
         enemySpaceShip: 0,
         enemySpaceShipShoot: 0,
+        fuelTicks: 0,
     }
 
 
@@ -105,6 +107,7 @@ class Game {
         this.elements.map((e) => e.render(this.ctx))
         this.enemyElements.map((e) => e.render(this.ctx));
         this.shots.map(e => e.render(this.ctx));
+        this.fuelTanks.map(e => e.render(this.ctx));
 
 
         // MAKING FPS CONSTANT
@@ -121,6 +124,7 @@ class Game {
 
     startgame() {
         CONSTANTS.gameStarted = true;
+        backgroundSound.play();
     }
 
     update() {
@@ -129,6 +133,7 @@ class Game {
         })
         this.enemyElements.map((e) => e.update(this.keys));
         this.shots.map(e => e.update(this.keys));
+        this.fuelTanks.map(e => e.update(this.keys));
 
         Object.entries(this.timeElapsedFor).forEach((object) => {
             this.timeElapsedFor[object[0]]++;
@@ -144,7 +149,7 @@ class Game {
             this.timeElapsedFor.enemySpaceShip = 0;
         }
 
-        if (this.timeElapsedFor.enemySpaceShipShoot > Math.floor(Math.random() * 90) + 200) {
+        if (this.timeElapsedFor.enemySpaceShipShoot > Math.floor(Math.random() * 90) + 150) {
 
             this.enemyElements.forEach((spaceship) => {
 
@@ -161,10 +166,16 @@ class Game {
 
         }
 
+        if (this.timeElapsedFor.fuelTicks > 200) {
+            this.fuelTanks.push(new Fuel({ position: new Vector(this.generateRandomNumber(20, this.canvas.width - 20), 0 - 200) }))
+            this.timeElapsedFor.fuelTicks = 0;
+        }
+
 
 
         this.collisions.playerCollisionWithAsteroids();
         this.collisions.bulletCollisionWithAsteroids();
+        this.collisions.playerWithfuelCollision();
         this.clearEnemyElements();
 
     }
@@ -229,6 +240,23 @@ class Game {
                         root.playerGotHit = false;
                         document.querySelector('.gameArea').classList.remove("shakeBoard");
                     }, 300)
+                }
+            })
+        },
+
+        playerWithfuelCollision: () => {
+            this.fuelTanks.forEach((fuelTank, fuelPostion) => {
+                if (fuelTank.position.x > this.player.pos.x &&
+                    fuelTank.position.x < this.player.pos.x + this.player.width &&
+                    fuelTank.position.y + fuelTank.height > this.player.pos.y &&
+                    fuelTank.position.y + fuelTank.height < this.player.pos.y + this.player.height) {
+
+
+
+                    this.fuelTanks.splice(fuelPostion, 1);
+
+                    this.player.fuelLevel = 20;
+
                 }
             })
         }
