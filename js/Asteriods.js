@@ -11,6 +11,7 @@ export class Asteroids {
         this.scalingFactor = 0.3
         this.width = asteriods.width * this.scalingFactor;
         this.height = asteriods.height * this.scalingFactor;
+        this.canShoot = false;
     }
 
     render(ctx) {

@@ -1,6 +1,7 @@
 import { Asteroids } from "./js/Asteriods.js";
 import { Bullet } from "./js/Bullet.js";
 import { CONSTANTS } from "./js/constants.js";
+import { EnemyBullet } from "./js/EnemyBullet.js";
 import { EnemySpaceShip } from "./js/EnemySpaceShip.js";
 import { asteriods, canvasBackground, backgroundSound, destroyedSound } from "./js/GameAssets.js";
 import { Player } from "./js/Player.js";
@@ -24,7 +25,8 @@ class Game {
 
     timeElapsedFor = {
         asteroids: 0,
-        enemySpaceShip: 0
+        enemySpaceShip: 0,
+        enemySpaceShipShoot: 0,
     }
 
 
@@ -41,7 +43,9 @@ class Game {
         CONSTANTS.canvasheight = this.canvas.height;
         CONSTANTS.canvaswidth = this.canvas.width;
 
+        this.score = 0;
 
+        this.playerGotHit = false;
 
 
         this.registerEventListeners();
@@ -80,7 +84,6 @@ class Game {
     spawnElements = {
         spawnSpaceShip: () => {
             this.enemyElements.push(new EnemySpaceShip({ position: new Vector(this.canvas.width, this.generateRandomNumber(10, this.canvas.height - 200)) }));
-
         },
         spawnAsteroids: () => {
             this.enemyElements.push(new Asteroids({ position: new Vector(this.canvas.width - 20, this.generateRandomNumber(10, this.canvas.height - 200)) }))
@@ -105,11 +108,19 @@ class Game {
 
 
         // MAKING FPS CONSTANT
-        if (Date.now() - this.currentTime > this.diff) {
-            this.update();
-            this.currentTime = Date.now();
+        if (CONSTANTS.gameStarted) {
+
+            if (Date.now() - this.currentTime > this.diff) {
+                this.update();
+                this.currentTime = Date.now();
+            }
         }
 
+
+    }
+
+    startgame() {
+        CONSTANTS.gameStarted = true;
     }
 
     update() {
@@ -133,9 +144,33 @@ class Game {
             this.timeElapsedFor.enemySpaceShip = 0;
         }
 
+        if (this.timeElapsedFor.enemySpaceShipShoot > Math.floor(Math.random() * 90) + 200) {
+
+            this.enemyElements.forEach((spaceship) => {
+
+
+                if (spaceship.canShoot) {
+
+                    this.enemyElements.push(new EnemyBullet({ position: new Vector(spaceship.position.x, spaceship.position.y + spaceship.height / 2) }))
+                    this.timeElapsedFor.enemySpaceShipShoot = 0;
+
+                }
+
+
+            });
+
+        }
+
+
+
         this.collisions.playerCollisionWithAsteroids();
         this.collisions.bulletCollisionWithAsteroids();
         this.clearEnemyElements();
+
+    }
+
+
+    enemySpaceShipShoot() {
 
     }
 
@@ -162,6 +197,12 @@ class Game {
                         this.enemyElements.splice(enemyPos, 1);
                         destroyedSound.play();
 
+                        this.score++;
+
+                        document.querySelector("#scoreArea").innerHTML = `Score: ${this.score}`;
+
+
+
                     }
                 })
             })
@@ -177,8 +218,17 @@ class Game {
                         (enemy.position.y + enemy.height > this.player.pos.y &&
                             enemy.position.y + enemy.height < this.player.pos.y + this.player.height))
                 ) {
-                    console.log("collided");
-
+                    // console.log("collided");
+                    if (!this.playerGotHit) {
+                        this.player.fuelLevel -= 2;
+                        this.playerGotHit = true;
+                    }
+                    var root = this;
+                    document.querySelector(".gameArea").classList.add("shakeBoard");
+                    setTimeout(function () {
+                        root.playerGotHit = false;
+                        document.querySelector('.gameArea').classList.remove("shakeBoard");
+                    }, 300)
                 }
             })
         }
@@ -193,4 +243,3 @@ window.addEventListener("load", () => {
     window.game = new Game()
 
 })
-

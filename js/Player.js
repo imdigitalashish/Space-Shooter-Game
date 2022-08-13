@@ -10,10 +10,16 @@ export class Player {
         console.log(playerSpaceShip.width);
         this.pos = new Vector(10, 10)
         this.velocity = new Vector(8, 8)
-        this.scalingFactor = 0.5
+        this.scalingFactor = 0.4
         this.angleByRotated = 0;
         this.width = playerSpaceShip.width * this.scalingFactor
         this.height = playerSpaceShip.height * this.scalingFactor
+        this.deltaAngle = 4
+
+
+
+        this.fuelLevel = 20;
+        this.fuelUsedInMovement = 0.02;
 
     }
 
@@ -32,25 +38,7 @@ export class Player {
         ctx.restore()
     }
 
-
-    update(keys) {
-        // if (keys.KeyD) { this.pos = this.pos.add(new Vector(6, 0)) }
-        if (keys.KeyW) { this.pos = this.pos.add(new Vector(Math.cos(this.angleByRotated * Math.PI / 180) * this.velocity.x, Math.sin(this.angleByRotated * Math.PI / 180) * this.velocity.y)) }
-        else if (keys.KeyS) { this.pos = this.pos.add(new Vector(Math.cos(this.angleByRotated * Math.PI / 180) * -this.velocity.x, -Math.sin(this.angleByRotated * Math.PI / 180) * this.velocity.y)) }
-        // else if (keys.KeyA) { this.pos = this.pos.add(new Vector(-6, 0)) }
-        // console.log(this.pos);
-
-        if (keys.ArrowLeft) {
-            this.angleByRotated -= 8;
-        } else if (keys.ArrowRight) {
-            this.angleByRotated += 8;
-        }
-
-        if (playerShipSound.currentTime >= 0.3) {
-            playerShipSound.pause();
-            playerShipSound.currentTime = 0;
-        }
-
+    checkForBoundaryCollision() {
         if (this.pos.y > CONSTANTS.canvasheight) {
             this.pos.y = 0;
         }
@@ -61,10 +49,49 @@ export class Player {
             this.pos.x = 0
         }
 
-        if (this.pos.x + this.width< 0) {
+        if (this.pos.x + this.width < 0) {
             this.pos.x = CONSTANTS.canvaswidth;
         }
+    }
+
+
+    update(keys) {
+        if (keys.KeyD) { this.angleByRotated += this.deltaAngle }
+        if (keys.KeyW) {
+            this.fuelLevel -= this.fuelUsedInMovement;
+            this.pos = this.pos.add(new Vector(Math.cos(this.angleByRotated * Math.PI / 180) * this.velocity.x, Math.sin(this.angleByRotated * Math.PI / 180) * this.velocity.y))
+        }
+        if (keys.KeyS) {
+            this.fuelLevel -= this.fuelUsedInMovement;
+            this.pos = this.pos.add(new Vector(Math.cos(this.angleByRotated * Math.PI / 180) * -this.velocity.x, -Math.sin(this.angleByRotated * Math.PI / 180) * this.velocity.y))
+        }
+        if (keys.KeyA) { this.angleByRotated -= this.deltaAngle }
+        // console.log(this.pos);
+
+        if (keys.ArrowLeft) {
+            this.angleByRotated -= this.deltaAngle;
+        } else if (keys.ArrowRight) {
+            this.angleByRotated += this.deltaAngle;
+        }
+
+        if (playerShipSound.currentTime >= 0.3) {
+            playerShipSound.pause();
+            playerShipSound.currentTime = 0;
+        }
+        this.checkForBoundaryCollision();
+
+        this.updateFuelLevel();
         return false;
+    }
+
+    updateFuelLevel() {
+        let percentage = this.fuelLevel / 20 * 100;
+        if (this.fuelLevel < 0) {
+            CONSTANTS.gameStarted = false;
+            document.querySelector(".gameOverOverlay").style.display = "inline";
+        }
+        console.log(percentage);
+        document.querySelector("#fuelProgress").style.width = percentage + "%";
     }
 
     shoot() {

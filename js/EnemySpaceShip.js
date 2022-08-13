@@ -7,8 +7,8 @@ export class EnemySpaceShip {
 
     constructor({ position }) {
         this.position = position;
-
-        this.velocity = new Vector(-6, 0)
+        this.canShoot = true;
+        this.velocity = new Vector(-8, 0)
         this.scalingFactor = 0.2;
         this.width = enemySpaceShip.width * this.scalingFactor;
         this.height = enemySpaceShip.height * this.scalingFactor;

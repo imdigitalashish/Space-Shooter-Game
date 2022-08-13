@@ -1,0 +1,134 @@
+@font-face {
+    font-family: "GameFont";
+    src: url("./fonts/kenvector_future_thin.ttf");
+}
+
+
+* {
+    padding: 0;
+    margin: 0;
+}
+
+body {
+    /* overflow: hidden; */
+    background: url("assets/webpagebackground.jpg");
+    background-size: cover;
+    font-family: "GameFont", 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+}
+
+body::-webkit-scrollbar {
+    display: none;
+}
+
+.gameArea {
+    display: flex;
+    justify-content: center;
+    margin-top: 36px;
+    position: relative;
+}
+
+.shakeBoard {
+    animation: shakeBoard 400ms;
+}
+
+@keyframes shakeBoard {
+    10% {
+        transform: rotate(-2deg);
+    }
+
+    20% {
+        transform: rotate(2deg);
+    }
+
+    30% {
+        transform: rotate(-2deg);
+    }
+
+    40% {
+        transform: rotate(2deg);
+    }
+
+    50% {
+        transform: rotate(-2deg);
+    }
+
+    60% {
+        transform: rotate(2deg);
+    }
+
+    70% {
+        transform: rotate(-2deg);
+    }
+
+    80% {
+        transform: rotate(2deg);
+    }
+
+    90% {
+        transform: rotate(-2deg);
+    }
+
+    100% {
+        transform: none;
+    }
+
+}
+
+#scoreArea {
+    font-size: 23px;
+    color: white;
+    left: 0;
+    position: absolute;
+}
+
+canvas {
+    border-radius: 10px;
+}
+
+.fuelArea {
+    position: absolute;
+    bottom: -20px;
+    z-index: 2;
+    left: 0;
+    display: flex;
+    width: 98%;
+    gap: 20px;
+    align-items: center;
+}
+
+.fuelArea>p {
+    color: white;
+}
+
+#fuelProgress {
+    background-color: white;
+    height: 10px;
+    width: 98%;
+
+}
+
+.gameOverOverlay {
+    display: none;
+    color: white;
+    position: absolute;
+    height: 100%;
+    width: 100%;
+    text-align: center;
+    background-color: rgba(0, 0, 0, 0.8);
+    z-index: 5;
+    padding-top: 20%;
+    font-size: 3rem;
+}
+
+.introScreen {
+    height: 100vh;
+}
+
+.gameScreen {
+    height: 100vh;
+    padding-top: 20px;
+}
+
+.game  {
+    transition: all 0.2s;
+}

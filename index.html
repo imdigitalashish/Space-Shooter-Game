@@ -8,35 +8,31 @@
     <title>Space Shooter Game</title>
     <script src="script.js" type="module"></script>
 
-    <style>
-        * {
-            padding: 0;
-            margin: 0;
-        }
-
-        body {
-            overflow: hidden;
-            background: url("assets/webpagebackground.jpg");
-            background-size: cover;
-        }
-
-        .gameArea {
-            display: flex;
-            justify-content: center;
-            margin-top: 36px;
-        }
-
-        canvas {
-            border-radius: 10px;
-        }
-    </style>
+    <link rel="stylesheet" href="main.css">
 </head>
 
 <body>
+    <div class="game">
+
+        <div class="introScreen">
+            <button onclick='document.querySelector(".game").style.transform = "translateY(-100vh)";'>Start Game</button>
+        </div>
+
+        <div class="gameOverOverlay">
+            <h2>Game Over</h2>
+        </div>
 
 
-    <div class="gameArea">
-        <canvas id="mycanvas"></canvas>
+        <div class="gameScreen">
+            <div class="gameArea">
+                <p id="scoreArea">Score: 0</p>
+                <canvas id="mycanvas"></canvas>
+                <div class="fuelArea">
+                    <p>Fuel</p>
+                    <div id="fuelProgress"></div>
+                </div>
+            </div>
+        </div>
     </div>
 
 
