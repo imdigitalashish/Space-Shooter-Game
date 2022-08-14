@@ -109,9 +109,9 @@ class Game {
         $.post("game.php", { name: name, score: this.score, timer: this.timer }, function (data, status) {
             let response = JSON.parse(data);
 
-            if (response.message === "inserted") {
+//             if (response.message === "inserted") {
                 root.resetGame();
-            }
+//             }
         })
     }
 
