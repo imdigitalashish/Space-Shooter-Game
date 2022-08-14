@@ -29,6 +29,7 @@ class Game {
         enemySpaceShip: 0,
         enemySpaceShipShoot: 0,
         fuelTicks: 0,
+        gameTimerTicks: 0,
     }
 
 
@@ -56,6 +57,8 @@ class Game {
 
         this.currentTime = Date.now();
         this.diff = 2;
+
+        this.timer = 0;
     }
 
     // isPlaying = false;
@@ -75,13 +78,55 @@ class Game {
             if (e.code === "Space") {
                 this.shots.push(this.player.shoot())
             }
+            if (e.code === "KeyP") {
+                CONSTANTS.gamePaused = CONSTANTS.gamePaused ? false : true;
+            }
         })
         document.addEventListener("keyup", (e) => {
             this.keys[e.code] = false;
         })
+
+
+        document.querySelector("#playerNameInput").addEventListener("input", (e) => {
+            if (e.target.value.length == 0) {
+                document.querySelector("#ContinueButton").setAttribute("disabled", true);
+            } else {
+                document.querySelector("#ContinueButton").removeAttribute("disabled");
+            }
+        })
+
+        document.querySelector("#ContinueButton").addEventListener("click", (e) => {
+            this.submitRank(document.querySelector("#playerNameInput").value);
+
+        })
     }
 
     generateRandomNumber = (min, max) => Math.floor(Math.random() * (max - min)) + min;
+
+
+    submitRank(name) {
+        let root = this;
+        $.post("game.php", { name: name, score: this.score, timer: this.timer }, function (data, status) {
+            let response = JSON.parse(data);
+
+            if (response.message === "inserted") {
+                root.resetGame();
+            }
+        })
+    }
+
+    resetGame() {
+        this.score = 0;
+        this.timer = 0;
+        this.player.pos = new Vector(10, 10);
+        this.enemyElements = []
+        this.shots = []
+        this.fuelTanks = [];
+        CONSTANTS.gameStarted = true;
+        console.log('eh');
+        this.player.fuelLevel = 20;
+        document.querySelector(".gameOverOverlay").style.display = "none";
+    }
 
     spawnElements = {
         spawnSpaceShip: () => {
@@ -112,10 +157,11 @@ class Game {
 
         // MAKING FPS CONSTANT
         if (CONSTANTS.gameStarted) {
-
-            if (Date.now() - this.currentTime > this.diff) {
-                this.update();
-                this.currentTime = Date.now();
+            if (!CONSTANTS.gamePaused) {
+                if (Date.now() - this.currentTime > this.diff) {
+                    this.update();
+                    this.currentTime = Date.now();
+                }
             }
         }
 
@@ -125,6 +171,11 @@ class Game {
     startgame() {
         CONSTANTS.gameStarted = true;
         backgroundSound.play();
+    }
+
+    updateGameTimer() {
+        this.timer++;
+        document.querySelector("#Timer").innerHTML = "Timer: " + this.timer;
     }
 
     update() {
@@ -169,6 +220,11 @@ class Game {
         if (this.timeElapsedFor.fuelTicks > 200) {
             this.fuelTanks.push(new Fuel({ position: new Vector(this.generateRandomNumber(20, this.canvas.width - 20), 0 - 200) }))
             this.timeElapsedFor.fuelTicks = 0;
+        }
+
+        if (this.timeElapsedFor.gameTimerTicks > 60) {
+            this.updateGameTimer();
+            this.timeElapsedFor.gameTimerTicks = 0;
         }
 
 

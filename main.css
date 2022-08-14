@@ -81,6 +81,14 @@ body::-webkit-scrollbar {
     position: absolute;
 }
 
+#Timer {
+    font-size: 23px;
+    color: white;
+    left: 0;
+    position: absolute;
+    top: 30px;
+}
+
 canvas {
     border-radius: 10px;
 }
@@ -127,7 +135,29 @@ canvas {
     padding-top: 10rem;
 }
 
-.introScreen > button {
+.introScreen>button {
+    padding-inline: 20px;
+    padding-block: 10px;
+    border-radius: 10px;
+    font-size: 20px;
+    background-color: orange;
+    color: white;
+    cursor: pointer;
+    margin-top: 20px;
+}
+
+.introScreen>button:disabled{
+    padding-inline: 20px;
+    padding-block: 10px;
+    border-radius: 10px;
+    font-size: 20px;
+    background-color: rgba(255, 166, 0, 0.705) !important;
+    color: white;
+    cursor: pointer;
+    margin-top: 20px;
+}
+
+#ContinueButton {
     padding-inline: 20px;
     padding-block: 10px;
     border-radius: 10px;
@@ -144,11 +174,12 @@ canvas {
     list-style: none;
 }
 
-.instructions > li {
+.instructions>li {
     margin-top: 20px;
     font-size: 1.3rem;
 }
-.instructions > li::before{
+
+.instructions>li::before {
     content: '> ';
     font-family: 'Courier New', Courier, monospace;
 }
@@ -158,6 +189,13 @@ canvas {
     padding-top: 20px;
 }
 
-.game  {
+.game {
     transition: all 0.2s;
+}
+
+.gameOverOverlay>input {
+    padding: 20px;
+    font-size: 20px;
+    outline: none;
+    border-radius: 10px;
 }
