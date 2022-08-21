@@ -6,6 +6,7 @@ import { EnemySpaceShip } from "./js/EnemySpaceShip.js";
 import { Fuel } from "./js/Fuel.js";
 import { asteriods, canvasBackground, backgroundSound, destroyedSound, fuelImage } from "./js/GameAssets.js";
 import { Player } from "./js/Player.js";
+import { Score } from "./js/score.js";
 import { Vector } from "./js/Vector.js";
 
 const _ = (q) => document.querySelector(q);
@@ -21,7 +22,6 @@ class Game {
     enemyElements = [];
     shots = [];
     fuelTanks = [];
-
     keys = {};
 
     timeElapsedFor = {
@@ -40,6 +40,7 @@ class Game {
         this.canvas.width = window.innerWidth * 0.9;
         this.canvas.height = window.innerHeight * 0.85;
         this.canvas.style.backgroundColor = "black";
+
         requestAnimationFrame(this.render.bind(this));
 
         // INITIALIZING CONSTANGS
@@ -60,6 +61,8 @@ class Game {
 
         this.timer = 0;
     }
+
+
 
     // isPlaying = false;
     // playBackgroundSound() {
@@ -260,6 +263,9 @@ class Game {
                         bullet.position.x + bullet.width < enemy.position.x + enemy.width + 20 &&
                         ((bullet.position.y > enemy.position.y && bullet.position.y < enemy.position.y + enemy.width))) {
 
+
+                        this.elements.push(new Score({ x: enemy.position.x, y: enemy.position.y, state: "success" }));
+
                         this.shots.splice(bulletPos, 1);
                         this.enemyElements.splice(enemyPos, 1);
                         destroyedSound.play();
@@ -267,7 +273,6 @@ class Game {
                         this.score++;
 
                         document.querySelector("#scoreArea").innerHTML = `Score: ${this.score}`;
-
 
 
                     }
@@ -286,9 +291,13 @@ class Game {
                             enemy.position.y + enemy.height < this.player.pos.y + this.player.height))
                 ) {
                     // console.log("collided");
+
+
                     if (!this.playerGotHit) {
                         this.player.fuelLevel -= 2;
                         this.playerGotHit = true;
+                        this.elements.push(new Score({ x: this.player.pos.x, y: this.player.pos.y, state: "error" }));
+
                     }
                     var root = this;
                     document.querySelector(".gameArea").classList.add("shakeBoard");
